@@ -1,0 +1,411 @@
+
+
+
+/*==============================================================*/
+/* Table: CLIENTE                                               */
+/*==============================================================*/
+create table CLIENTE (
+   ID_CLIENTE           INT4                 not null,
+   NOMBRE_CLIENTE       CHAR(25)             null,
+   DIRECCION_CLIENTE    CHAR(25)             null,
+   TELEFONO_CLIENTE     INT4                 null,
+   constraint PK_CLIENTE primary key (ID_CLIENTE)
+);
+
+/*==============================================================*/
+/* Index: CLIENTE_PK                                            */
+/*==============================================================*/
+create unique index CLIENTE_PK on CLIENTE (
+ID_CLIENTE
+);
+
+/*==============================================================*/
+/* Table: DETALLE_DE_LA_VENTA                                   */
+/*==============================================================*/
+create table DETALLE_DE_LA_VENTA (
+   ID_DETALLE_VENTAS    INT4                 not null,
+   ID_VENTA             INT4                 null,
+   ID_PRODUCTO          INT4                 null,
+   CANTIDAD_VENTA       INT4                 null,
+   PRECIO_PROTUCTO      FLOAT8               null,
+   TOTAL                FLOAT8               null,
+   constraint PK_DETALLE_DE_LA_VENTA primary key (ID_DETALLE_VENTAS)
+);
+
+/*==============================================================*/
+/* Index: DETALLE_DE_LA_VENTA_PK                                */
+/*==============================================================*/
+create unique index DETALLE_DE_LA_VENTA_PK on DETALLE_DE_LA_VENTA (
+ID_DETALLE_VENTAS
+);
+
+/*==============================================================*/
+/* Index: V_TIENE_DET_FK                                        */
+/*==============================================================*/
+create  index V_TIENE_DET_FK on DETALLE_DE_LA_VENTA (
+ID_VENTA
+);
+
+/*==============================================================*/
+/* Index: D_TIENE_V_FK                                          */
+/*==============================================================*/
+create  index D_TIENE_V_FK on DETALLE_DE_LA_VENTA (
+ID_PRODUCTO
+);
+
+/*==============================================================*/
+/* Table: ESTADO_DEL_VENDEDOR                                   */
+/*==============================================================*/
+create table ESTADO_DEL_VENDEDOR (
+   ID_ESTADO            INT4                 not null,
+   DESCRIPCION_ESTADO   CHAR(25)             null,
+   constraint PK_ESTADO_DEL_VENDEDOR primary key (ID_ESTADO)
+);
+
+/*==============================================================*/
+/* Index: ESTADO_DEL_VENDEDOR_PK                                */
+/*==============================================================*/
+create unique index ESTADO_DEL_VENDEDOR_PK on ESTADO_DEL_VENDEDOR (
+ID_ESTADO
+);
+
+/*==============================================================*/
+/* Table: PRODUCTO                                              */
+/*==============================================================*/
+create table PRODUCTO (
+   ID_PRODUCTO         INT4                 not null,
+   ID_PROVEEDOR         INT4                 null,
+   NOMBRE_PRODUCTO      CHAR(25)             null,
+   COSTO                FLOAT8               null,
+   PRECIO               FLOAT8               null,
+   FECHA_VENCIMIENTO    DATE                 null,
+   STOCK_               INT4                 null,
+   UNIDAD               CHAR(20)             null,
+   constraint PK_PRODUCTO primary key (ID_PROVEEDOR)
+);
+
+/*==============================================================*/
+/* Index: PRODUCTO_PK                                           */
+/*==============================================================*/
+create unique index PRODUCTO_PK on PRODUCTO (
+ID_PROVEEDOR
+);
+
+/*==============================================================*/
+/* Index: P_TIENE_P_FK                                          */
+/*==============================================================*/
+create  index P_TIENE_P_FK on PRODUCTO (
+ID_PROVEEDOR
+);
+
+/*==============================================================*/
+/* Table: PROMOCIONES                                           */
+/*==============================================================*/
+create table PROMOCIONES (
+   ID_PROMOCION         INT4                 not null,
+   ID_SUCURSAL          INT4                 null,
+   ID_PROVEEDOR         INT4                 null,
+   FECHA_INI_PROMO      DATE                 null,
+   FECHA_FIN_PROMO      DATE                 null,
+   CANT_PROD_DES        FLOAT8               null,
+   PRECIO_FINL_DESC     FLOAT8               null,
+   constraint PK_PROMOCIONES primary key (ID_PROMOCION)
+);
+
+/*==============================================================*/
+/* Index: PROMOCIONES_PK                                        */
+/*==============================================================*/
+create unique index PROMOCIONES_PK on PROMOCIONES (
+ID_PROMOCION
+);
+
+/*==============================================================*/
+/* Index: F_TIEN_P_FK                                           */
+/*==============================================================*/
+create  index F_TIEN_P_FK on PROMOCIONES (
+ID_SUCURSAL
+);
+
+/*==============================================================*/
+/* Index: P_TIENE_PROM_FK                                       */
+/*==============================================================*/
+create  index P_TIENE_PROM_FK on PROMOCIONES (
+ID_PROVEEDOR
+);
+
+/*==============================================================*/
+/* Table: PROVEEDOR                                             */
+/*==============================================================*/
+create table PROVEEDOR (
+   ID_PROVEEDOR         INT4                 not null,
+   NOMBRE_RAZON_SOCIAL  CHAR(25)             not null,
+   DIRECCION_PROVEEDOR  CHAR(25)             not null,
+   TELEFONO_PROVEEDOR   CHAR(25)             not null,
+   REPRE_LEGAL          CHAR(30)             null,
+   constraint PK_PROVEEDOR primary key (ID_PROVEEDOR)
+);
+
+/*==============================================================*/
+/* Index: PROVEEDOR_PK                                          */
+/*==============================================================*/
+create unique index PROVEEDOR_PK on PROVEEDOR (
+ID_PROVEEDOR
+);
+
+/*==============================================================*/
+/* Table: SUCURSAL                                              */
+/*==============================================================*/
+create table SUCURSAL (
+   ID_SUCURSAL          INT4                 not null,
+   ID_PROVEEDOR         INT4                 null,
+   DIRECCION_SUCURSAL   CHAR(20)             not null,
+   TELEFONO_SUCURSAL    CHAR(13)             not null,
+   constraint PK_SUCURSAL primary key (ID_SUCURSAL)
+);
+
+
+
+/*==============================================================*/
+/* Index: SUCURSAL_PK                                           */
+/*==============================================================*/
+create unique index SUCURSAL_PK on SUCURSAL (
+ID_SUCURSAL
+);
+
+/*==============================================================*/
+/* Index: P_TIENE_S_FK                                          */
+/*==============================================================*/
+create  index P_TIENE_S_FK on SUCURSAL (
+ID_PROVEEDOR
+);
+
+/*==============================================================*/
+/* Table: VENDEDOR                                              */
+/*==============================================================*/
+create table VENDEDOR (
+   ID_VENDEDOR          INT4                 not null,
+   ID_SUCURSAL          INT4                 null,
+   ID_ESTADO            INT4                 null,
+   NOMBRE_VENDEDOR      CHAR(25)             not null,
+   APELLIDOS__VENDEDOR  CHAR(25)             not null,
+   DIRECCION_VENDEDOR   CHAR(25)             not null,
+   FECHA_NACIMIENTO     DATE                 not null,
+   FECHA_INGRESO        DATE                 not null,
+   TIPO_DE_SANGRE       CHAR(20)             null,
+   constraint PK_VENDEDOR primary key (ID_VENDEDOR)
+	
+);
+
+
+
+/*==============================================================*/
+/* Index: VENDEDOR_PK                                           */
+/*==============================================================*/
+create unique index VENDEDOR_PK on VENDEDOR (
+ID_VENDEDOR
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK                                              */
+/*==============================================================*/
+create  index TIENE_FK on VENDEDOR (
+ID_SUCURSAL
+);
+
+/*==============================================================*/
+/* Index: V_TIEN_E_FK                                           */
+/*==============================================================*/
+create  index V_TIEN_E_FK on VENDEDOR (
+ID_ESTADO
+);
+
+/*==============================================================*/
+/* Table: VENTA                                                 */
+/*==============================================================*/
+create table VENTA (
+   ID_VENTA             INT4                 not null,
+   ID_SUCURSAL          INT2                 null,
+   ID_VENDEDOR          INT4                 null,
+   ID_CLIENTE           INT4                 null,
+   DESCUENTO            DECIMAL              null,
+   FECHA_VENTA          DATE                 null,
+   TOTAL_VENTA          FLOAT8               null,
+   PRECIO_FINAL_DESC    FLOAT8               null,
+   constraint PK_VENTA primary key (ID_VENTA)
+);
+
+
+/*==============================================================*/
+/* Index: V_TIENE_V_FK                                          */
+/*==============================================================*/
+create  index V_TIENE_V_FK on VENTA (
+ID_SUCURSAL
+);
+
+
+/*==============================================================*/
+/* Index: VENTA_PK                                              */
+/*==============================================================*/
+create unique index VENTA_PK on VENTA (
+ID_VENTA
+);
+
+/*==============================================================*/
+/* Index: V_TIENE_V_FK                                          */
+/*==============================================================*/
+create  index V_TIENE_VE_FK on VENTA (
+ID_VENDEDOR
+);
+
+/*==============================================================*/
+/* Index: C_TIENE_V_FK                                          */
+/*==============================================================*/
+create  index C_TIENE_V_FK on VENTA (
+ID_CLIENTE
+);
+
+
+
+alter table DETALLE_DE_LA_VENTA
+   add constraint FK_DETALLE__D_TIENE_V_PRODUCTO foreign key (ID_PRODUCTO)
+      references PRODUCTO (ID_PROVEEDOR)
+      on delete restrict on update restrict;
+
+alter table DETALLE_DE_LA_VENTA
+   add constraint FK_DETALLE__V_TIENE_D_VENTA foreign key (ID_VENTA)
+      references VENTA (ID_VENTA)
+      on delete restrict on update restrict;
+
+alter table PRODUCTO
+   add constraint FK_PRODUCTO_P_TIENE_P_PROVEEDO foreign key (ID_PROVEEDOR)
+      references PROVEEDOR (ID_PROVEEDOR)
+      on delete restrict on update restrict;
+
+alter table PROMOCIONES
+   add constraint FK_PROMOCIO_F_TIEN_P_SUCURSAL foreign key (ID_SUCURSAL)
+      references SUCURSAL (ID_SUCURSAL)
+      on delete restrict on update restrict;
+
+alter table PROMOCIONES
+   add constraint FK_PROMOCIO_P_TIENE_P_PRODUCTO foreign key (ID_PROVEEDOR)
+      references PRODUCTO (ID_PROVEEDOR)
+      on delete restrict on update restrict;
+
+alter table SUCURSAL
+   add constraint FK_SUCURSAL_P_TIENE_S_PROVEEDO foreign key (ID_PROVEEDOR)
+      references PROVEEDOR (ID_PROVEEDOR)
+      on delete restrict on update restrict;
+
+alter table VENDEDOR
+   add constraint FK_VENDEDOR_TIENE_SUCURSAL foreign key (ID_SUCURSAL)
+      references SUCURSAL (ID_SUCURSAL)
+      on delete restrict on update restrict;
+
+alter table VENDEDOR
+   add constraint FK_VENDEDOR_V_TIEN_E_ESTADO_D foreign key (ID_ESTADO)
+      references ESTADO_DEL_VENDEDOR (ID_ESTADO)
+      on delete restrict on update restrict;
+
+alter table VENTA
+   add constraint FK_VENTA_V_TIENE_V_SUCURSAL foreign key (ID_SUCURSAL)
+      references SUCURSAL (ID_SUCURSAL)
+      on delete restrict on update restrict;
+
+
+
+alter table VENTA
+   add constraint FK_VENTA_C_TIENE_V_CLIENTE foreign key (ID_CLIENTE)
+      references CLIENTE (ID_CLIENTE)
+      on delete restrict on update restrict;
+
+alter table VENTA
+   add constraint FK_VENTA_V_TIENE_V_VENDEDOR foreign key (ID_VENDEDOR)
+      references VENDEDOR (ID_VENDEDOR)
+      on delete restrict on update restrict;
+
+/* Insertando  en la tabla Cliente*/
+
+insert into Cliente values(1, 'Carmen Luna', 'Villamarina', '0993842910');
+insert into Cliente values(2, 'Luis Velez', 'San Mateo', '0993842910');
+insert into Cliente values(3, 'Rosa Quiroz', 'La Florita', '0983742849');
+insert into Cliente values(4, 'Tatiana Malina', 'Santa Martha', '0912342536');
+insert into Cliente values(5, 'Maruja Bravo', 'San Pablo', '0999020432');
+
+
+/* Insertando  en la tabla Proveedor*/
+
+insert into Proveedor values(1, ' Baxter Ecuador', '0932452133','Mario Conforme');
+insert into Proveedor values(2, ' Tecnandina S.A', '0934251738','Luis Veliz');
+insert into Proveedor values(3, 'ANHEXA', '0956278181','Camilo Lopez');
+insert into Proveedor values(4, ' Calox', '0974839210','Maria Zambrano');
+insert into Proveedor values(5, 'Abbott Del Ecuador', '0943217463','Monica Gomez');
+
+
+
+/* Insertando  en la tabla Estado del vendedor*/
+
+insert into ESTADO_DEL_VENDEDOR values(1, 'Trabaja actualmente');
+insert into ESTADO_DEL_VENDEDOR values(2, 'No trabaja');
+
+
+/* Insertando  en la tabla Sucursal*/
+
+insert into Sucursal values(1,3,'El porvenir 2', '0965443245');
+insert into Sucursal values(2,2,'Los Esteros', '0972135473');
+insert into Sucursal values(3,1,'San Jose', '0943185493');
+
+
+
+/* Insertando  en la tabla Vendedor*/
+
+insert into Vendedor values(1, 1, 1,'Ana','Bailon Intriago', 'La Porvenir', '1996/04/20','2018/03/02','0+');
+insert into Vendedor values(2, 1, 2,'Nathaly','Lopez Velez', 'El jocay', '2003/01/17','2019/04/20','0+');
+insert into Vendedor values(3, 1, 2,'Cesar','Bailon Intriago', 'Los colorados', '1994/12/17','2020/07/18','0-');
+insert into Vendedor values(4, 2, 1,'Gema','Velez Veliz', 'El mirador', '1998/04/18','2021/08/22','0+');
+insert into Vendedor values(5, 2, 1,'Sulay','Intriago Bravo ', 'El jocay', '1995/10/04','2019/05/30','0+');
+insert into Vendedor values(6, 3, 1,'Ronald','Olester Pinargote', 'Costa Azul', '1994/11/09','2019/03/11','0+');
+insert into Vendedor values(7, 1, 1,'Romario','Caicedo Benitez', 'La dolorosa', '1999/05/10','2017/04/01','0+');
+insert into Vendedor values(8, 3, 1,'Sofia','Quiroz Mendoza', 'Chone', '1999/01/15','2021/06/08','0+');
+insert into Vendedor values(9, 3, 1,'Monserrate','Bailon Intriago', 'La Porvenir', '1993/04/20','2021/03/04','0-');
+
+
+/* Insertando  en la tabla Producto*/
+
+insert into Producto values(1, 1,'Paracetamol', 0.20, 0.45, '2021/08/18', 2,'1 unidad');
+insert into Producto values(2, 2,'Alcohol', 6.50, 7.25, '2021/06/04', 8,'2 Litros');
+insert into Producto values(3, 3,'Lemonflu',  0.45, 0.66, '2021/07/05', 8,'1 Unidad');
+insert into Producto values(4, 4,'Leche nido', 15.99, 17.00, '2021/06/07', 4,'1 unidad');
+insert into Producto values(5, 5,'Enalapril', 4.60, 6.00, '2021/12/3', 4,'1 Unidad');
+
+
+
+/* Insertando  en la tabla Venta*/
+
+insert into Venta values(1,1,1, 5,  2.10, '2021/12/15', 30.00, 26.00 );
+insert into Venta values(2,2,2, 4, 1.20, '2019/07/22',20.00, 19.00 );
+insert into Venta values(3,3,3, 3, 0.70, '2020/11/17',10.00, 9.40 );
+insert into Venta values(4,2,4, 2, 0.60, '2021/01/15',60.00, 59.00 );
+insert into Venta values(5,2,1, 4, 1.20, '2019/07/22',20.00, 19.00 );
+insert into Venta values(6,2,1, 4, 1.20, '2019/07/22',20.00, 19.00 );
+insert into Venta values(7,2,5, 3, 1.20, '2019/07/22',20.00, 19.00 );
+insert into Venta values(8,1,6, 1, 1.20, '2019/07/22',20.00, 19.00 );
+
+
+/* Insertando  en la tabla Detalle venta*/
+
+insert into DETALLE_DE_LA_VENTA values (1,1,1,2,5,10);
+insert into DETALLE_DE_LA_VENTA values (2,2,2,4,10,40);
+insert into DETALLE_DE_LA_VENTA values (3,3,1,10,10,10);
+insert into DETALLE_DE_LA_VENTA values (4,4,1,10,10,10);
+insert into DETALLE_DE_LA_VENTA values (5,5,1,10,10,10);
+insert into DETALLE_DE_LA_VENTA values (6,6,2,4,10,40);
+insert into DETALLE_DE_LA_VENTA values (7,6,2,4,10,40);
+insert into DETALLE_DE_LA_VENTA values (8,1,2,14,10,140);
+insert into DETALLE_DE_LA_VENTA values (9,7,5,14,10,140);
+insert into DETALLE_DE_LA_VENTA values (10,8,4,24,10,240);
+insert into DETALLE_DE_LA_VENTA values (11,7,5,15,10,150);
+
+
+/* Insertando  en la tabla promociones*/
+insert into promociones values (1,1,1,'2021/06/01','2021/06/09',5,10);
+insert into promociones values (2,2,2,'2021/06/30','2021/07/02',7,50);
